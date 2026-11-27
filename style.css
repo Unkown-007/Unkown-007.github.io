@@ -265,13 +265,63 @@ h1 { font-size: clamp(2.8rem, 6.4vw, 5rem); font-weight: 800; line-height: 1; co
 .contact { padding-bottom: 5rem; }
 .contact-mail { display: inline-block; font: 700 clamp(1.4rem, 4.6vw, 3.2rem)/1.15 var(--mono); color: var(--accent); text-decoration: none; word-break: break-all; text-shadow: 0 0 24px rgba(34, 211, 238, .3); }
 .contact-mail:hover { color: var(--green); }
-.contact-list { list-style: none; padding: 0; margin: 2rem 0 2.4rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; max-width: 52rem; }
+.contact-list { list-style: none; padding: 0; margin: 2rem 0 2.4rem; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 3rem; max-width: 66rem; }
 .contact-list li { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: 1rem; padding: .8rem 0; border-bottom: 1px solid var(--line); align-items: center; }
 .contact-list li > span:first-child { color: var(--muted); font: 500 .82rem var(--mono); }
 .reveal { font: 500 .95rem var(--mono); color: var(--accent); background: transparent; border: 1px dashed var(--line); padding: .3rem .6rem; cursor: pointer; justify-self: start; }
 .reveal:hover { border-color: var(--accent); }
 
 .footer { border-top: 1px solid var(--line); padding: 1.6rem 1.25rem; text-align: center; color: var(--muted); font: 400 .8rem var(--mono); }
+
+/* ---------- hero social icons ---------- */
+.icon-link { display: inline-grid; place-items: center; width: 46px; height: 46px; color: var(--muted); box-shadow: inset 0 0 0 1px var(--line); clip-path: var(--cut); transition: color .15s, box-shadow .15s; }
+.icon-link svg { width: 20px; height: 20px; fill: currentColor; }
+.icon-link:hover { color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+
+/* ---------- what I'm looking for ---------- */
+.offers { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.5rem; }
+.offer { padding: 1.6rem 1.8rem; }
+.offer-tag { font: 500 .78rem var(--mono); color: var(--green); }
+.offer h3 { font-size: 1.35rem; color: #fff; margin: .35rem 0 1rem; }
+.offer dl { margin: 0; }
+.offer dl div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 1rem; padding: .55rem 0; border-top: 1px dashed var(--line); }
+.offer dt { font: 500 .82rem var(--mono); color: var(--muted); padding-top: .15rem; }
+.offer dd { margin: 0; }
+.sub-h { font-size: 1.1rem; color: var(--accent); margin: 2.4rem 0 1rem; }
+.missions-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .6rem; }
+.missions-list li { font: 500 .9rem var(--mono); padding: .55rem .9rem; border: 1px solid var(--line); background: var(--bg-2); }
+.missions-list li::before { content: "[+] "; color: var(--green); }
+
+/* ---------- timeline extras ---------- */
+.timeline .tl-points { margin: .3rem 0 0; padding-left: 1.1rem; color: var(--muted); max-width: 46em; }
+.timeline .tl-points li { margin-bottom: .35rem; display: list-item; padding: 0; }
+.timeline .tl-points li::before { content: none; }
+.timeline .tl-points li::marker { content: "▸ "; color: var(--accent); }
+.timeline .note { font-size: .88rem; color: var(--muted); font-style: italic; margin-top: .4rem; }
+
+/* ---------- CTF challenges ---------- */
+.ctf { border-top: 1px solid var(--line); margin-bottom: .4rem; }
+.ctf details { border-bottom: 1px solid var(--line); }
+.ctf summary {
+  display: grid; grid-template-columns: minmax(0, 1fr) 6rem 5rem 6.5rem; gap: .8rem; align-items: center;
+  padding: .75rem .4rem; cursor: pointer; list-style: none; font: 500 .88rem var(--mono); color: var(--text);
+}
+.ctf summary::-webkit-details-marker { display: none; }
+.ctf summary span:first-child::before { content: "▸"; display: inline-block; width: 1em; margin-right: .3em; text-align: center; color: var(--accent); transition: transform .15s; }
+.ctf details[open] summary span:first-child::before { transform: rotate(90deg); }
+.ctf summary:hover { background: var(--bg-2); }
+.ctf summary span:nth-child(2), .ctf summary span:nth-child(3) { color: var(--muted); }
+.ctf summary .ok { color: var(--green); }
+.ctf summary .ko { color: var(--muted); }
+.ctf dl { margin: 0; padding: .2rem .4rem 1.1rem 1.6rem; }
+.ctf dt { font: 600 .8rem var(--mono); color: var(--accent); margin-top: .7rem; }
+.ctf dd { margin: .2rem 0 0; color: var(--muted); font-size: .97rem; max-width: 46em; }
+
+/* ---------- badges & contact ---------- */
+.badges { list-style: none; margin: 0; padding: 0; display: grid; gap: .7rem; }
+.badges li { display: flex; align-items: center; gap: .8rem; font-size: .95rem; }
+.badges img { flex: none; }
+.mail-row { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem 1.6rem; }
 
 /* ---------- responsive ---------- */
 @media (max-width: 960px) {
@@ -284,8 +334,15 @@ h1 { font-size: clamp(2.8rem, 6.4vw, 5rem); font-weight: 800; line-height: 1; co
   .contact-list { grid-template-columns: 1fr; }
 }
 @media (max-width: 720px) {
-  .nav nav { display: none; }
+  .nav { flex-wrap: wrap; row-gap: .5rem; padding-bottom: .4rem; }
   .nav .btn-small { margin-left: auto; }
+  .nav nav { order: 3; width: 100%; margin: 0; overflow-x: auto; scrollbar-width: none; }
+  .nav ul { gap: 1.2rem; padding-bottom: .3rem; }
+  .nav ul a { white-space: nowrap; }
+  .offers { grid-template-columns: minmax(0, 1fr); }
+  .ctf summary { grid-template-columns: minmax(0, 1fr) auto; row-gap: .1rem; }
+  .ctf summary span:nth-child(3) { display: none; }
+  .ctf summary span:nth-child(4) { grid-column: 2; }
   .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .facts li:nth-child(2) { border-right: 0; }
   .facts li:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
@@ -300,6 +357,16 @@ h1 { font-size: clamp(2.8rem, 6.4vw, 5rem); font-weight: 800; line-height: 1; co
   .term-out { height: 18rem; }
   .prompt { font-size: .75rem; }
   .contact-list li { grid-template-columns: 1fr; gap: .2rem; }
+}
+@media print {
+  body { background: #fff; color: #000; }
+  body::before, body::after, .rain, .nav, .radar, .legend, #console, .cta, .mail-row button, .footer { display: none !important; }
+  .hero, .section-head, .dossier, .offers, .extras { display: block; }
+  h1, h2, h3, .section-head h2, .contact-mail { color: #000; text-shadow: none; }
+  .section-head h2::before, .section-head h2::after { content: none; }
+  .panel-frame { background: none; border-color: #ccc; }
+  p, dd, li { color: #222 !important; }
+  .section { padding-top: 1.5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }

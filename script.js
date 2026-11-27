@@ -7,14 +7,14 @@ const esc = (s) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">
 /* ============ DATA (from the CV) ============ */
 const SKILLS = [
   { name: "Pentest & audit", short: "Pentest", angle: 300, dist: .62,
-    desc: "Audit de sécurité en entreprise (SPIE ICS), méthodologie et réglementation du test d'intrusion, CTF.",
-    tools: ["Kali Linux", "Nmap", "Nikto", "John the Ripper", "WAF", "Injection SQL", "OSINT", "Cryptographie"] },
+    desc: "Audit d'une application industrielle (OT/ICS) chez SPIE ICS, méthodologie et réglementation du test d'intrusion, CTF.",
+    tools: ["Audit OT/ICS", "Kali Linux", "Nmap", "Nikto", "John the Ripper", "WAF", "Injection SQL", "OSINT", "Cryptographie"] },
   { name: "Réseaux", short: "Réseaux", angle: 20, dist: .78,
     desc: "Bases réseaux et protocoles, équipements Cisco, sécurité des réseaux sans fil et mobiles. Deux certifications Cisco Networking Academy.",
     tools: ["TCP/IP", "Cisco IOS", "Protocoles", "Wi-Fi & mobile", "Détection des menaces"] },
   { name: "Développement", short: "Dev", angle: 85, dist: .5,
     desc: "Du C++ chez Cisco au Python chez SPIE ICS, plus des outils de sécurité maison comme un scanner de ports multithreadé.",
-    tools: ["Python", "C", "C++", "C#", "Java", "JavaScript", "PHP", "SQL", "HTML/CSS", "Git", "API REST"] },
+    tools: ["Python", "C", "C++", "C#", "Java", "JavaScript", "PHP", "SQL", "Flask", "HTML/CSS", "Git", "API REST"] },
   { name: "Systèmes", short: "Systèmes", angle: 150, dist: .72,
     desc: "Administration système avancée et scripting, sécurité des systèmes, architecture des machines.",
     tools: ["Linux", "Windows", "Kali Linux", "Scripting", "Structures de données", "Support & tickets"] },
@@ -28,25 +28,36 @@ const SKILLS = [
 
 const PROJECTS = [
   { id: "ctf", title: "CTF CyberNight 2026", sub: "4/5 flags · CTFREI", meta: "Compétition CTFREI · 2026 · Web, système, OSINT",
-    body: `<p>Une nuit de challenges. J'ai flaggé 4 épreuves sur 5 et publié un write-up complet : démarche, requêtes SQL, programmes en C.</p>
-      <table><thead><tr><th>Challenge</th><th>Catégorie</th><th>Points</th><th>Statut</th></tr></thead><tbody>
-      <tr><td>Alien Hatch 1 : Indigestion</td><td>Web</td><td>500</td><td class="ok">Flaggé</td></tr>
-      <tr><td>Peindre l'espoir</td><td>OSINT</td><td>495</td><td class="ok">Flaggé</td></tr>
-      <tr><td>RTFM</td><td>Système</td><td>427</td><td class="ok">Flaggé</td></tr>
-      <tr><td>Le lundi au soleil !</td><td>OSINT</td><td>493</td><td class="ok">Flaggé</td></tr>
-      <tr><td>Hell Yeahhhh !</td><td>OSINT</td><td>500</td><td class="ko">Non flaggé</td></tr></tbody></table>
-      <ul class="points">
-        <li><strong>Web</strong> : injection SQL UNION sur SQLite, énumération de <code>sqlite_master</code> jusqu'à la table <code>secrets</code>.</li>
-        <li><strong>Système</strong> : mot de passe caché dans un commentaire roff d'une page <code>man</code>, puis un programme C qui appelle <code>libgetflag</code>.</li>
-      </ul>
-      <p class="lesson">Ce que j'en retiens : tester un vrai UNION SELECT avant de conclure à un filtre, et lire la réponse brute plutôt que l'interface.</p>
-      <p style="margin-top:1.2rem"><a class="btn btn-ghost" href="https://github.com/Unkown-007/cybernight-2026-writeup" target="_blank" rel="noopener">Lire le write-up sur GitHub</a></p>` },
+    body: `<p>Une compétition de sécurité organisée par CTFREI, l'association cyber de l'EFREI. J'ai résolu 4 challenges sur 5, en web, système et OSINT. Ouvrez un challenge pour voir le problème, ma démarche et ce que j'en retiens (les flags ne sont pas affichés).</p>
+      <div class="ctf">
+        <details open><summary><span>Alien Hatch 1 : Indigestion</span><span>Web</span><span>500 pts</span><span class="ok">Résolu</span></summary>
+          <dl><dt>Le problème</dt><dd>Un mini-jeu web envoie le contenu d'un champ de formulaire au serveur. Il faut récupérer une donnée cachée dans la base.</dd>
+          <dt>Ma démarche</dt><dd>Une simple apostrophe déclenche une erreur SQLite : la saisie est insérée telle quelle dans la requête. J'ai compté les colonnes avec <code>UNION SELECT</code>, listé les tables via <code>sqlite_master</code>, puis lu la table cachée <code>secrets</code>.</dd>
+          <dt>Ce que j'en retiens</dt><dd>Un message de refus ne prouve pas qu'un filtre existe : ici la requête renvoyait juste zéro ligne. Il faut lire la réponse brute du serveur, pas seulement l'interface.</dd></dl></details>
+        <details><summary><span>RTFM</span><span>Système</span><span>427 pts</span><span class="ok">Résolu</span></summary>
+          <dl><dt>Le problème</dt><dd>Sur un serveur en SSH, une bibliothèque C donne accès au compte root si on lui fournit le bon mot de passe, écrit dans aucune page de manuel affichée.</dd>
+          <dt>Ma démarche</dt><dd>Une page de manuel indiquait qu'elle « en sait plus qu'elle n'en affiche ». J'ai lu son fichier source compressé avec <code>man -w</code> et <code>zcat</code> : le mot de passe était dans un commentaire masqué. J'ai ensuite écrit un petit programme C lié à la bibliothèque.</dd>
+          <dt>Ce que j'en retiens</dt><dd>Ce qu'on voit à l'écran n'est pas toujours le contenu réel d'un fichier. Lire la source brute fait partie de la recherche.</dd></dl></details>
+        <details><summary><span>Peindre l'espoir</span><span>OSINT</span><span>495 pts</span><span class="ok">Résolu</span></summary>
+          <dl><dt>Le problème</dt><dd>Retrouver le nom complet de la personne représentée sur une fresque de street art, à partir d'indices sur deux commerces d'un village italien.</dd>
+          <dt>Ma démarche</dt><dd>Les deux commerces se trouvent sur la même place de Spongano, dans les Pouilles. J'ai retrouvé la fresque de l'artiste, puis son sujet : l'écrivaine Grazia Deledda, prix Nobel de littérature 1926.</dd>
+          <dt>Ce que j'en retiens</dt><dd>Croiser plusieurs indices permet de situer un lieu précisément. Le format du flag demandait le nom complet, pas le nom d'usage.</dd></dl></details>
+        <details><summary><span>Le lundi au soleil !</span><span>OSINT</span><span>493 pts</span><span class="ok">Résolu</span></summary>
+          <dl><dt>Le problème</dt><dd>Une seule photo, prise depuis le salon d'une maison à vendre. Il faut trouver la référence cadastrale de la parcelle.</dd>
+          <dt>Ma démarche</dt><dd>Une recherche d'image inversée m'a mené à l'annonce, à Agen, avec un terrain de 354 m². J'ai téléchargé le cadastre ouvert de la commune et filtré les parcelles par surface en Python : 10 sur 12 319. Une seule était sur les bons coteaux, ce que j'ai confirmé sur la photo aérienne de l'IGN.</dd>
+          <dt>Ce que j'en retiens</dt><dd>Les données publiques (open data) permettent de passer d'une photo à une adresse exacte. C'est aussi ce que ferait un attaquant.</dd></dl></details>
+        <details><summary><span>Hell Yeahhhh !</span><span>OSINT</span><span>500 pts</span><span class="ko">Non résolu</span></summary>
+          <dl><dt>Le problème</dt><dd>Retrouver la photo d'un « intrus » prise à un concert, la chanson jouée à ce moment-là et le bloc où il était assis.</dd>
+          <dt>Ma démarche</dt><dd>J'ai identifié le Stade de France et le concert de System of a Down, calculé la chanson à 21h23 avec les setlists et la durée des morceaux, et comparé les vues des blocs dans le visualiseur 3D officiel du stade.</dd>
+          <dt>Où j'en suis</dt><dd>Il reste 6 combinaisons possibles. La date exacte du post d'origine permettrait de trancher entre les deux soirs.</dd></dl></details>
+      </div>
+      <p style="margin-top:1.4rem"><a class="btn btn-ghost" href="https://github.com/Unkown-007/cybernight-2026-writeup" target="_blank" rel="noopener">Lire le write-up complet sur GitHub</a></p>` },
   { id: "nexus", title: "NexusPC", sub: "Boutique volontairement vulnérable", meta: "Projet ethical hacking EFREI · équipe de 4",
-    body: `<p>Une boutique en ligne construite pour être attaquée : une application Flask avec une base SQLite, truffée de failles à exploiter pour s'entraîner.</p>
+    body: `<p>Un site e-commerce en Flask et SQLite construit avec des failles, pour s'entraîner à les exploiter et à les corriger.</p>
       <ul class="chips"><li>Flask</li><li>SQLite</li><li>Python</li><li>Injection SQL</li></ul>
       <ul class="points">
         <li>Ma partie : l'injection SQL, de la faille dans le code à son exploitation.</li>
-        <li>Travail en équipe de 4, chacun responsable d'une famille de vulnérabilités.</li>
+        <li>Projet d'équipe à 4, en 2<sup>e</sup> année à l'EFREI.</li>
       </ul>
       <p class="lesson">Construire la faille soi-même est la meilleure façon de comprendre comment la corriger.</p>` },
   { id: "scan", title: "Scanner de ports", sub: "Python appliqué à la cyber", meta: "Projet EFREI · Python",
@@ -64,12 +75,12 @@ const PROJECTS = [
       </ul>
       <ul class="chips"><li>IA</li><li>Robotique</li><li>Gestion de projet</li><li>Prise de parole</li></ul>` },
   { id: "solar", title: "Suivi solaire automatisé", sub: "Projet de terminale STI2D", meta: "Lycée La Salle Saint-Nicolas · 2025",
-    body: `<p>Construction et automatisation d'un système qui oriente un panneau pour suivre le soleil.</p>
+    body: `<p>Un panneau qui suit le soleil tout seul : capteurs de lumière, servomoteurs et programme en C++ sur Arduino.</p>
       <ul class="points">
         <li>Prototypage avec Arduino et impression 3D.</li>
         <li>Fabrication de maquettes en atelier.</li>
       </ul>
-      <ul class="chips"><li>Arduino</li><li>Électronique</li><li>Impression 3D</li><li>Automatisme</li></ul>` },
+      <ul class="chips"><li>Arduino</li><li>C++</li><li>Capteurs</li><li>Servomoteurs</li><li>Impression 3D</li></ul>` },
   { id: "games", title: "Jeux vidéo & 3D", sub: "Blender, C++, mods", meta: "Projet personnel",
     body: `<p>Quand je ne casse pas des applications, j'en construis d'autres : modélisation 3D, scripts et modifications de jeux.</p>
       <ul class="points">
@@ -360,6 +371,7 @@ const CMDS = {
   help: () => `Commandes disponibles :
   <span class="hl">whoami</span>        qui je suis
   <span class="hl">dispo</span>         ce que je recherche et quand
+  <span class="hl">missions</span>      les missions qui m'intéressent
   <span class="hl">competences</span>   mes domaines techniques
   <span class="hl">parcours</span>      expériences et formation
   <span class="hl">projets</span>       projets et CTF
@@ -374,7 +386,9 @@ Basé à Sèvres (92). Saxophoniste depuis 10 ans.`,
   dispo: () => `<span class="ok">● disponible</span>
 Stage      : 6 semaines à temps plein, du 7 juin au 16 juillet 2027
 Alternance : analyste cybersécurité junior, dès septembre 2027
-Rythme     : 2 semaines en entreprise / 1 semaine à l'école`,
+Rythme     : 2 semaines en entreprise / 1 semaine à l'école
+Lieu       : Île-de-France, sur site (Sèvres, 92)`,
+  missions: () => ["Audit de sécurité", "Tests d'intrusion", "Sécurité des réseaux et des systèmes", "Supervision et détection (SOC)", "Sécurité OT / ICS", "Automatisation en Python"].map((m) => `<span class="ok">[+]</span> ${m}`).join("\n"),
   competences: () => SKILLS.map((s) => `<span class="hl">${esc(s.name.padEnd(24))}</span>${esc(s.tools.slice(0, 6).join(", "))}`).join("\n"),
   parcours: () => `<span class="ice">2026</span>  Stage cybersécurité & réseaux · SPIE ICS (2 mois)
 <span class="ice">2026</span>  CTF CyberNight · 4/5 challenges
@@ -396,6 +410,7 @@ PORT      STATE  SERVICE
 80/tcp    <span class="ok">open</span>   web-security (sqli, owasp)
 443/tcp   <span class="ok">open</span>   cryptographie
 1337/tcp  <span class="ok">open</span>   ctf-player
+502/tcp   <span class="ok">open</span>   audit-ot-ics (modbus, stage SPIE ICS)
 3306/tcp  <span class="ok">open</span>   sql
 8080/tcp  <span class="ok">open</span>   python / c / c++
 9000/tcp  <span class="hl">filtered</span> alternance (en attente de votre offre)
@@ -454,7 +469,7 @@ termIn.addEventListener("keydown", (e) => {
 $("#term").addEventListener("click", (e) => { if (!e.target.closest("a,button") && !window.getSelection().toString()) termIn.focus({ preventScroll: true }); });
 
 const suggest = $("#term-suggest");
-["help", "whoami", "dispo", "nmap clement", "projets", "cat flag.txt"].forEach((c) => {
+["help", "whoami", "dispo", "missions", "nmap clement", "cat flag.txt"].forEach((c) => {
   const b = document.createElement("button");
   b.type = "button"; b.textContent = c;
   b.addEventListener("click", () => run(c));
@@ -462,6 +477,18 @@ const suggest = $("#term-suggest");
 });
 termOut.innerHTML = `<div class="res">Bienvenue sur le terminal de <span class="hl">Clément Berton</span>.
 Tapez <span class="hl">help</span> ou cliquez sur une commande ci-dessous.</div>`;
+
+/* ============ COPY EMAIL ============ */
+$("#copy-mail").addEventListener("click", async function () {
+  const label = this.textContent;
+  try {
+    await navigator.clipboard.writeText(this.dataset.mail);
+    this.textContent = "Adresse copiée";
+  } catch {
+    this.textContent = "Copie impossible, sélectionnez l'adresse";
+  }
+  setTimeout(() => { this.textContent = label; }, 2200);
+});
 
 /* ============ PHONE REVEAL (keeps the number out of plain HTML for scrapers) ============ */
 $("#phone").addEventListener("click", function () {
@@ -492,4 +519,4 @@ const spy = new IntersectionObserver((entries) => {
     navLinks.forEach((a) => a.classList.toggle("active", a.getAttribute("href") === "#" + e.target.id));
   });
 }, { rootMargin: "-45% 0px -50% 0px" });
-["competences", "parcours", "projets", "console", "contact"].forEach((id) => spy.observe(document.getElementById(id)));
+["competences", "recherche", "parcours", "projets", "console", "contact"].forEach((id) => spy.observe(document.getElementById(id)));
